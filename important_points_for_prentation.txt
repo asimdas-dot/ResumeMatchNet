@@ -1,0 +1,162 @@
+Working principle /archetecture:
+
+User Input → File Upload (PDF/DOCX/TXT)
+           ↓
+    Data Loader (src/data/loader.py)
+           ↓
+    Text Cleaner (src/preprocessing/cleaner.py)
+           ↓
+    Feature Extractor (src/features/tfidf_extractor.py)
+           ↓
+    Skill Extractor (src/features/skill_extractor.py)
+           ↓
+    ResumeMatchNet Model (src/models/resume_matchnet.py)
+           ↓
+    Scoring & Evaluation (src/evaluation/metrics.py)
+           ↓
+    Results Display (web/templates/results.html)
+
+                           OR 
+
+                          
+
+          USER INPUT LAYER                  
+  Resume Upload │ Job Select │ Paste Text   
+
+                  ▼
+┌─────────────────────────────────────────────┐
+│         PREPROCESSING LAYER                 │
+│  Text Cleaning │ Tokenization │ Stopwords  │
+└─────────────────┬───────────────────────────┘
+                  ▼
+┌─────────────────────────────────────────────┐
+│         FEATURE EXTRACTION                  │
+│  TF-IDF Vectors │ Skill Database │ NER      │
+└─────────────────┬───────────────────────────┘
+                  ▼
+┌─────────────────────────────────────────────┐
+│          MATCHING ENGINE                    │
+│  Cosine Similarity │ Skill Overlap         │
+└─────────────────┬───────────────────────────┘
+                  ▼
+┌─────────────────────────────────────────────┐
+│          SCORING & OUTPUT                   │
+│  Weighted Score (60% Text + 40% Skills)    │
+│  Matched/Missing Skills │ Recommendations  │
+└─────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           METHODOLOGY 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Dataset Collection
+├── Hugging Face: resume-score-details (1,031 samples)
+└── Resume-Atlas: 13,389 resumes, 43 categories
+
+STEP 2: Text Preprocessing
+├── Lowercase conversion
+├── Remove special characters & punctuation
+├── Remove stopwords (a, an, the, etc.)
+└── Tokenization
+
+STEP 3: Feature Extraction
+├── TF-IDF Vectorization
+└── Convert text to numerical vectors
+
+STEP 4: Skill Extraction
+├── 200+ skill database
+├── Pattern matching & NER
+└── Extract skills from both documents
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 5: Model Development
+├── Cosine similarity for text matching
+├── Jaccard similarity for skill matching
+└── Weighted scoring system
+
+STEP 6: Scoring Mechanism
+├── Score = (0.6 × Text_Sim) + (0.4 × Skill_Score)
+└── Range: 0% (No match) to 100% (Perfect match)
+
+STEP 7: Evaluation
+├── Accuracy, Precision, Recall, F1-Score
+└── Cross-validation with test dataset
+
+STEP 8: Deployment
+├── Streamlit web interface
+└── Local/Cloud deployment ready
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         MATHEMATICAL MODEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. TEXT SIMILARITY (Cosine Similarity)
+   
+   Similarity(A,B) = (A·B) / (||A|| × ||B||)
+   
+   Where:
+   A, B = TF-IDF vectors of resume and job
+   Range: 0 (different) to 1 (identical)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2. SKILL MATCH SCORE
+   
+   Skill_Score = |R ∩ J| / |J|
+   
+   Where:
+   R = Skills in Resume
+   J = Skills in Job Description
+   Range: 0 to 1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3. FINAL WEIGHTED SCORE
+   
+   Match_Score = (Wt × Text_Sim) + (Ws × Skill_Score)
+   
+   Where:
+   Wt = Text weight (0.6)
+   Ws = Skill weight (0.4)
+   Final Score × 100 = Percentage (0-100%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EXAMPLE CALCULATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+If Text_Sim = 0.85 and Skill_Score = 0.75
+Then Match_Score = (0.6×0.85) + (0.4×0.75) = 0.81
+Final = 81% Match
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        TECHNOLOGIES & TOOLS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Programming Language:
+└── Python 3.9+
+
+Libraries & Frameworks:
+├── Streamlit - Web Interface
+├── Scikit-learn - TF-IDF & Similarity
+├── NLTK/spaCy - NLP Processing
+├── Pandas/NumPy - Data Handling
+├── PyPDF2/docx2txt - File Processing
+└── Matplotlib/Seaborn - Visualization
+
+Datasets:
+├── Hugging Face Datasets
+└── Resume-Atlas (13,389 resumes)
+
+Development Tools:
+├── VS Code / Jupyter Notebook
+├── Git for version control
+└── Docker for containerization
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+

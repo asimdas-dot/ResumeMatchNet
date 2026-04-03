@@ -1,0 +1,48 @@
+# Location: ResumeMatchNet/.dockerignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data (too large for Docker image)
+data/raw/*.csv
+data/raw/*.arrow
+data/processed/*.npz
+
+# Logs
+logs/
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Testing
+tests/__pycache__/
+.pytest_cache/
+
+# Notebooks (optional - can include if needed)
+# notebooks/
+
+# OS files
+.DS_Store
+Thumbs.db
